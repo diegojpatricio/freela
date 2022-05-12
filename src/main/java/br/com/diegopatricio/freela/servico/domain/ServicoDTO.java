@@ -2,9 +2,7 @@ package br.com.diegopatricio.freela.servico.domain;
 
 import br.com.diegopatricio.freela.categoria.domain.Categoria;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.io.Serializable;
 import java.util.List;
