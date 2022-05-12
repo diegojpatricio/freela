@@ -19,4 +19,4 @@ spring:
         username: sa
         url: jdbc:h2:mem:testdb
 server:
-    port: ${port:8081}
+    port: ${port:8080}

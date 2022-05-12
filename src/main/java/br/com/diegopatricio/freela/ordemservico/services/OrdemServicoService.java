@@ -9,6 +9,7 @@ import br.com.diegopatricio.freela.exceptions.ExceptionDataIntegrityViolation;
 import br.com.diegopatricio.freela.exceptions.ObjectNotFoundException;
 import br.com.diegopatricio.freela.ordemservico.domain.OrdemServico;
 import br.com.diegopatricio.freela.ordemservico.domain.OrdemServicoDTO;
+import br.com.diegopatricio.freela.ordemservico.domain.OrdemServicoDTOPut;
 import br.com.diegopatricio.freela.ordemservico.repositories.OrdemServicoRepository;
 import br.com.diegopatricio.freela.pagamento.domain.PagamentoBoleto;
 import br.com.diegopatricio.freela.pagamento.domain.StatusPagamento;
@@ -111,6 +112,10 @@ public class OrdemServicoService {
 
     public OrdemServico fromDTOOrdemServico(OrdemServicoDTO ordemServicoDTO){
         return new OrdemServico(ordemServicoDTO.getIdOrdemServico(), ordemServicoDTO.getDataSolicitacao(), ordemServicoDTO.getValorOrdemServico(), ordemServicoDTO.getPagamento(), ordemServicoDTO.getCliente());
+    }
+
+    public OrdemServico fromDTOPutOrdemServico(OrdemServicoDTOPut ordemServicoDTO){
+        return new OrdemServico(ordemServicoDTO.getPagamento());
     }
 
     private void updateData(OrdemServico novaOS, OrdemServico ordemServico){

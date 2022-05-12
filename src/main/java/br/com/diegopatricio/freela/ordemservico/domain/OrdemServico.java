@@ -51,6 +51,10 @@ public class OrdemServico implements Serializable {
         this.cliente = cliente;
     }
 
+    public OrdemServico(Pagamento pagamento) {
+        this.pagamento = pagamento;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
