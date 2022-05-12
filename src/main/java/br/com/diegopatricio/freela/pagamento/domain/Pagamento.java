@@ -3,6 +3,7 @@ package br.com.diegopatricio.freela.pagamento.domain;
 import br.com.diegopatricio.freela.ordemservico.domain.OrdemServico;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.Objects;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 @Table(name="PAGAMENTOS")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 public abstract class Pagamento implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -29,7 +31,7 @@ public abstract class Pagamento implements Serializable {
     public Pagamento(Integer idPagamento, StatusPagamento statusPagmento, OrdemServico ordemServico) {
         super();
         this.idPagamento = idPagamento;
-        this.statusPagamento = statusPagmento.getCod();
+        this.statusPagamento = (statusPagamento == null) ? null : statusPagmento.getCod();
         this.ordemServico = ordemServico;
     }
 

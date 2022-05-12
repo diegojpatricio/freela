@@ -2,10 +2,9 @@ package br.com.diegopatricio.freela.servico.domain;
 
 import br.com.diegopatricio.freela.categoria.domain.Categoria;
 import br.com.diegopatricio.freela.ordemservico.domain.OrdemServico;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
@@ -19,6 +18,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name="SERVICOS")
+@NoArgsConstructor
 public class Servico implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -27,29 +27,30 @@ public class Servico implements Serializable {
     @Column(name = "ID_SERVICO")
     private Integer idServico;
     @Column(name = "NOME")
-    private String nomeServico;
+    private String nome;
     @Column(name = "VALOR")
-    private Double valorServico;
-   @JsonIgnore
-   @ManyToMany
+    private Double valor;
+    @ManyToMany
     @JoinTable(name = "SERVICO_CATEGORIA",
-        joinColumns = @JoinColumn(name = "ID_SERVICO"),
-        inverseJoinColumns = @JoinColumn(name = "ID_CATEGORIA"))
+            joinColumns = @JoinColumn(name = "ID_SERVICO"),
+            inverseJoinColumns = @JoinColumn(name = "ID_CATEGORIA"))
     private List<Categoria> categorias = new ArrayList<>();
     @JsonIgnore
-    @ManyToMany
-    @JoinTable(name = "SERVICO_OS",
-            joinColumns = @JoinColumn(name = "ID_SERVICO"),
-            inverseJoinColumns = @JoinColumn(name = "ID_OS"))
+    @ManyToMany(mappedBy = "servicos")
     private List<OrdemServico> ordemServicos = new ArrayList<>();
 
-    public Servico() {
-    }
 
-    public Servico(Integer idServico, String nomeServico, Double valorServico, List<Categoria> categorias) {
+
+    /*public Servico(Integer idServico, String nome, Double valor) {
         this.idServico = idServico;
-        this.nomeServico = nomeServico;
-        this.valorServico = valorServico;
+        this.nome = nome;
+        this.valor = valor;
+    }*/
+
+    public Servico(Integer idServico, String nome, Double valor, List<Categoria> categorias) {
+        this.idServico = idServico;
+        this.nome = nome;
+        this.valor = valor;
         this.categorias = categorias;
     }
 
@@ -70,7 +71,10 @@ public class Servico implements Serializable {
     public String toString() {
         return getClass().getSimpleName() + "(" +
                 "idServico = " + idServico + ", " +
-                "nomeServico = " + nomeServico + ", " +
-                "valorServico = " + valorServico + ")";
+                "nomeServico = " + nome + ", " +
+                "valorServico = " + valor + ")";
     }
+
+
+
 }

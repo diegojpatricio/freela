@@ -2,8 +2,9 @@ package br.com.diegopatricio.freela.categoria.domain;
 
 
 import br.com.diegopatricio.freela.servico.domain.Servico;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
@@ -15,9 +16,9 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @Entity
 @Table(name="CATEGORIAS")
+@NoArgsConstructor
 public class Categoria implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -27,8 +28,17 @@ public class Categoria implements Serializable {
     private Integer idCategoria;
     @Column(name = "NOME_CATEGORIA")
     private String nomeCategoria;
+    @JsonIgnore
     @ManyToMany(mappedBy = "categorias")
     private List<Servico> servicos = new ArrayList<>();
+
+    public Categoria(Integer idServico, String nome, Double valor) {
+    }
+
+    public Categoria(Integer idCategoria, String nomeCategoria) {
+        this.idCategoria = idCategoria;
+        this.nomeCategoria = nomeCategoria;
+    }
 
     @Override
     public boolean equals(Object o) {

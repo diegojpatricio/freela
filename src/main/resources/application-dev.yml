@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    username: root
+    url: jdbc:mysql://localhost:3306/freela
+    password: '123'
+  jpa:
+    properties:
+      hibernate:
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+server:
+  port: ${port:8081}

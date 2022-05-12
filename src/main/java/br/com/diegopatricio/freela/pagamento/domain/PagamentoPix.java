@@ -1,6 +1,7 @@
 package br.com.diegopatricio.freela.pagamento.domain;
 
 import br.com.diegopatricio.freela.ordemservico.domain.OrdemServico;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import javax.persistence.Entity;
 @Getter
 @Setter
 @Entity
+@JsonTypeName("pagamentoPix")
 public class PagamentoPix extends Pagamento{
     private static final long serialVersionUID = 1L;
 

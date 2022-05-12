@@ -2,6 +2,7 @@ package br.com.diegopatricio.freela.pagamento.domain;
 
 import br.com.diegopatricio.freela.ordemservico.domain.OrdemServico;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
+@JsonTypeName("pagamentoBoleto")
 public class PagamentoBoleto extends Pagamento{
     private static final long serialVersionUID = 1L;
 

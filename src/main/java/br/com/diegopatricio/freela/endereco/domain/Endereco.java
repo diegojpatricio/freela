@@ -12,7 +12,6 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @Entity
 @Table(name="ENDERECOS")
 public class Endereco implements Serializable {
@@ -42,4 +41,19 @@ public class Endereco implements Serializable {
     private Cidade cidade;
 
 
+    public Endereco() {
+    }
+
+    public Endereco(Integer idEndereco, String logradouro, String numero, String complemento, String bairro, String cep,
+                    Cliente cliente, Cidade cidade) {
+        super();
+        this.idEndereco = idEndereco;
+        this.logradouro = logradouro;
+        this.numero = numero;
+        this.complemento = complemento;
+        this.bairro = bairro;
+        this.cep = cep;
+        this.cliente = cliente;
+        this.setCidade(cidade);
+    }
 }

@@ -10,7 +10,6 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @Entity
 @Table(name="CIDADES")
 public class Cidade implements Serializable {
@@ -26,6 +25,16 @@ public class Cidade implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ID_ESTADO")
     private Estado estado;
+
+    public Cidade() {
+    }
+
+    public Cidade(Integer idCidade, String nome, Estado estado) {
+        super();
+        this.idCidade = idCidade;
+        this.nome = nome;
+        this.estado = estado;
+    }
 
     @Override
     public boolean equals(Object o) {

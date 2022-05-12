@@ -6,7 +6,6 @@ import br.com.diegopatricio.freela.servico.domain.Servico;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
@@ -38,15 +37,18 @@ public class OrdemServico implements Serializable {
     @ManyToOne
     @JoinColumn(name = "ID_CLIENTE")
     private Cliente cliente;
-    @ManyToMany(mappedBy = "ordemServicos")
+    @ManyToMany
+    @JoinTable(name = "SERVICO_OS",
+            joinColumns = @JoinColumn(name = "ID_OS"),
+            inverseJoinColumns = @JoinColumn(name = "ID_SERVICO"))
     private Set<Servico> servicos =  new HashSet<>();
 
-    public OrdemServico(Integer idOrdemServico, Date dataSolicitacao, Cliente cliente, Double valorOrdemServico) {
-        super();
+    public OrdemServico(Integer idOrdemServico, Date dataSolicitacao, Double valorOrdemServico, Pagamento pagamento, Cliente cliente) {
         this.idOrdemServico = idOrdemServico;
         this.dataSolicitacao = dataSolicitacao;
-        this.cliente = cliente;
         this.valorOrdemServico = valorOrdemServico;
+        this.pagamento = pagamento;
+        this.cliente = cliente;
     }
 
     @Override
@@ -61,4 +63,8 @@ public class OrdemServico implements Serializable {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+
+
+
 }
