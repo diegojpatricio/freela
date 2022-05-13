@@ -1,7 +1,5 @@
 package br.com.diegopatricio.freela.pagamento.domain;
 
-import br.com.diegopatricio.freela.cliente.domain.TipoCliente;
-
 public enum StatusPagamento {
     PENDENTE(1, "Pendente"),
     QUITADO(2, "Quitado"),

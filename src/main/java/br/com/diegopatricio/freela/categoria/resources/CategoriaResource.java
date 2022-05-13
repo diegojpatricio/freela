@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -39,6 +40,7 @@ public class CategoriaResource {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ApiOperation(value = "Cadastra uma Categoria")
     public ResponseEntity<Void> cadastrarCategoria(@Valid @RequestBody CategoriaDTO categoriaDTO){
         Categoria categoria = service.fromDTO(categoriaDTO);
@@ -49,15 +51,17 @@ public class CategoriaResource {
     }
 
     @PutMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ApiOperation(value = "Atualiza uma Categoria")
-    public ResponseEntity<Void> atualizarCategoria(@Valid @RequestBody CategoriaDTO categoriaDTO, @PathVariable Integer id){
+    public ResponseEntity<Categoria> atualizarCategoria(@Valid @RequestBody CategoriaDTO categoriaDTO, @PathVariable Integer id){
         Categoria categoria = service.fromDTO(categoriaDTO);
         categoria.setIdCategoria(id);
         categoria = service.atualizarCategoria(categoria);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(categoria);
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ApiOperation(value = "Deleta uma Categoria")
     public ResponseEntity<Void> deletarCategoria(@PathVariable Integer id){
         service.deletarCategoria(id);

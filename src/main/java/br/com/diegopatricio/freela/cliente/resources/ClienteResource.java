@@ -6,8 +6,8 @@ import br.com.diegopatricio.freela.cliente.domain.ClienteResourceDTO;
 import br.com.diegopatricio.freela.cliente.services.ClienteService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -24,6 +24,7 @@ public class ClienteResource {
     private ClienteService service;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ApiOperation(value = "Retorna uma lista de Clientes")
     public ResponseEntity<List<ClienteDTO>> listarClientes(){
         List<Cliente> listaClientes = service.listarClientes();
@@ -49,19 +50,32 @@ public class ClienteResource {
 
     @PutMapping(value = "/{id}")
     @ApiOperation(value = "Atualiza informações de um Cliente")
-    public ResponseEntity<Void> atualizarCliente(@Valid @RequestBody ClienteDTO clienteDTO, @PathVariable Integer id){
+    public ResponseEntity<ClienteDTO> atualizarCliente(@Valid @RequestBody ClienteDTO clienteDTO, @PathVariable Integer id){
         Cliente cliente = service.fromDTO(clienteDTO);
         cliente.setIdCliente(id);
         cliente = service.atualizarCliente(cliente);
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping(value = "/{id}")
+    @ApiOperation(value = "Torna um perfil do cliente como administrador")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<ClienteDTO> tornarAdmin(@Valid @RequestBody ClienteDTO clienteDTO, @PathVariable Integer id){
+        Cliente cliente = service.fromDTO(clienteDTO);
+        cliente.setIdCliente(id);
+        cliente = service.tornarAdmin(cliente);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ApiOperation(value = "Deleta um Cliente")
     public ResponseEntity<Void> deletarCliente(@PathVariable Integer id){
         service.deletarCliente(id);
         return ResponseEntity.noContent().build();
     }
+
+
 /*
     @GetMapping(value = "/page")
     public ResponseEntity<Page<ClienteDTO>> buscarPagina(

@@ -1,20 +1,25 @@
 package br.com.diegopatricio.freela.cliente.services;
 
 import br.com.diegopatricio.freela.cidade.domain.Cidade;
-import br.com.diegopatricio.freela.cliente.domain.Cliente;
 import br.com.diegopatricio.freela.cliente.domain.ClienteDTO;
 import br.com.diegopatricio.freela.cliente.domain.ClienteResourceDTO;
 import br.com.diegopatricio.freela.cliente.domain.TipoCliente;
 import br.com.diegopatricio.freela.cliente.repositories.ClienteRepository;
+import br.com.diegopatricio.freela.cliente.domain.Cliente;
 import br.com.diegopatricio.freela.endereco.domain.Endereco;
 import br.com.diegopatricio.freela.endereco.repositories.EnderecoRepository;
+import br.com.diegopatricio.freela.exceptions.AuthorizationException;
 import br.com.diegopatricio.freela.exceptions.ExceptionDataIntegrityViolation;
 import br.com.diegopatricio.freela.exceptions.ObjectNotFoundException;
+import br.com.diegopatricio.freela.perfil.Perfil;
+import br.com.diegopatricio.freela.security.UserSS;
+import br.com.diegopatricio.freela.security.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +35,23 @@ public class ClienteService {
     @Autowired
     private EnderecoRepository enderecoRepository;
 
+
+    private Perfil perfil;
+
+    @Autowired
+    private BCryptPasswordEncoder pe;
+
     public List<Cliente> listarClientes(){
         return repo.findAll();
     }
 
     public Cliente buscarCliente(Integer id){
+
+        UserSS user = UserService.authenticated();
+        if (user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+            throw new AuthorizationException("Acesso negado");
+        }
+
         Optional<Cliente> obj = repo.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrato! ID: " + id +
                 ", Tipo: " + Cliente.class.getName()));
@@ -49,8 +66,24 @@ public class ClienteService {
     }
 
     public Cliente atualizarCliente(Cliente cliente) {
+        UserSS user = UserService.authenticated();
+        if (user==null || !user.hasRole(Perfil.ADMIN) && !cliente.getIdCliente().equals(user.getId())) {
+            throw new AuthorizationException("Acesso negado");
+        }
+
         Cliente novoCliente = buscarCliente(cliente.getIdCliente());
         updateData(novoCliente, cliente);
+        return repo.save(novoCliente);
+    }
+
+    public Cliente tornarAdmin(Cliente cliente) {
+        UserSS user = UserService.authenticated();
+        if (user==null || !user.hasRole(Perfil.ADMIN) && !cliente.getIdCliente().equals(user.getId())) {
+            throw new AuthorizationException("Acesso negado");
+        }
+
+        Cliente novoCliente = buscarCliente(cliente.getIdCliente());
+        tornarAdmin(novoCliente, cliente);
         return repo.save(novoCliente);
     }
 
@@ -71,10 +104,10 @@ public class ClienteService {
     }
 
     public Cliente fromDTO(ClienteDTO clienteDTO){
-        return new Cliente(clienteDTO.getIdCliente(), clienteDTO.getNome(), clienteDTO.getEmail(), null, null);
+        return new Cliente(clienteDTO.getIdCliente(), clienteDTO.getNome(), clienteDTO.getEmail(), null, null,null);
     }
     public Cliente fromNewDTO(ClienteResourceDTO clienteResourceDTO){
-        Cliente cliente = new Cliente(null, clienteResourceDTO.getNome(), clienteResourceDTO.getEmail(), clienteResourceDTO.getCpfCnpj(), TipoCliente.toEnum(clienteResourceDTO.getTipoCliente()));
+        Cliente cliente = new Cliente(null, clienteResourceDTO.getNome(), clienteResourceDTO.getEmail(), clienteResourceDTO.getCpfCnpj(), TipoCliente.toEnum(clienteResourceDTO.getTipoCliente()), pe.encode(clienteResourceDTO.getSenha()));
         Cidade cidade = new Cidade(clienteResourceDTO.getCidadeId(), null, null);
         Endereco endereco = new Endereco(null, clienteResourceDTO.getLogradouro(), clienteResourceDTO.getNumero(), clienteResourceDTO.getComplemento(), clienteResourceDTO.getBairro(), clienteResourceDTO.getCep(), cliente, cidade);
         cliente.getEnderecos().add(endereco);
@@ -88,5 +121,9 @@ public class ClienteService {
     private void updateData(Cliente novoCliente, Cliente cliente){
         novoCliente.setNome(cliente.getNome());
         novoCliente.setEmail(cliente.getEmail());
+    }
+
+    private void tornarAdmin(Cliente novoCliente, Cliente cliente){
+        novoCliente.addPerfil(Perfil.ADMIN);
     }
 }

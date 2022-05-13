@@ -1,11 +1,9 @@
 package br.com.diegopatricio.freela.cliente.services.validations;
 
 
+import br.com.diegopatricio.freela.cliente.repositories.ClienteRepository;
 import br.com.diegopatricio.freela.cliente.domain.Cliente;
 import br.com.diegopatricio.freela.cliente.domain.ClienteDTO;
-import br.com.diegopatricio.freela.cliente.domain.ClienteResourceDTO;
-import br.com.diegopatricio.freela.cliente.domain.TipoCliente;
-import br.com.diegopatricio.freela.cliente.repositories.ClienteRepository;
 import br.com.diegopatricio.freela.exceptions.FieldMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerMapping;

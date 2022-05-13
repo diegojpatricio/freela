@@ -42,6 +42,9 @@ public class ClienteResourceDTO implements Serializable {
 
     private Integer cidadeId;
 
+    @NotEmpty(message = "Preenchimento Obrigatório!")
+    private String senha;
+
     public ClienteResourceDTO(){
 
     }

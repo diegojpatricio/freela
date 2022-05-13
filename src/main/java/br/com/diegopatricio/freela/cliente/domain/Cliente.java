@@ -2,12 +2,14 @@ package br.com.diegopatricio.freela.cliente.domain;
 
 import br.com.diegopatricio.freela.endereco.domain.Endereco;
 import br.com.diegopatricio.freela.ordemservico.domain.OrdemServico;
+import br.com.diegopatricio.freela.perfil.Perfil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name="CLIENTES")
@@ -35,16 +37,25 @@ public class Cliente implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "cliente")
     private List<OrdemServico> ordemServicos =new ArrayList<>();
+    @JsonIgnore
+    private String senha;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "PERFIS")
+    private Set<Integer> perfis = new HashSet<>();
 
     public Cliente() {
+        addPerfil(Perfil.CLIENTE);
     }
 
-    public Cliente(Integer idCliente, String nome, String email, String cpfCnpj, TipoCliente tipoCliente) {
+    public Cliente(Integer idCliente, String nome, String email, String cpfCnpj, TipoCliente tipoCliente, String senha) {
         this.idCliente = idCliente;
         this.nome = nome;
         this.email = email;
         this.cpfCnpj = cpfCnpj;
         this.tipoCliente = (tipoCliente == null) ? null : tipoCliente.getCod();
+        this.senha = senha;
+        addPerfil(Perfil.CLIENTE);
     }
 
     public Integer getIdCliente() {
@@ -109,6 +120,22 @@ public class Cliente implements Serializable {
 
     public void setOrdemServicos(List<OrdemServico> ordemServicos) {
         this.ordemServicos = ordemServicos;
+    }
+
+    public Set<Perfil> getPerfis(){
+        return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
+    }
+
+    public void addPerfil(Perfil perfil){
+        perfis.add(perfil.getCod());
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     @Override

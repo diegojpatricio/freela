@@ -2,16 +2,11 @@ package br.com.diegopatricio.freela.ordemservico.domain;
 
 import br.com.diegopatricio.freela.cliente.domain.Cliente;
 import br.com.diegopatricio.freela.pagamento.domain.Pagamento;
-import br.com.diegopatricio.freela.servico.domain.Servico;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
