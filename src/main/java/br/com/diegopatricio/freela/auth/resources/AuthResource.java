@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import br.com.diegopatricio.freela.security.JWTUtil;
 import br.com.diegopatricio.freela.security.UserSS;
-
+/*
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthResource {
@@ -38,4 +38,4 @@ public class AuthResource {
         service.sendNewPassword(objDto.getEmail());
         return ResponseEntity.noContent().build();
     }
-}
+}*/
